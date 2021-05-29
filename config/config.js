@@ -1,4 +1,4 @@
-const config = require('../secret/passwords.js');
+const config = require('../server/secret/passwords.js');
 
 
 

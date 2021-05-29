@@ -1,25 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import MainPage from './components/mainPage.js';
+import LogNavBar from './utils/LoginNav.js';
+import NLogNavBar from './utils/notLoginnav.js';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+	state = {
+		isLogin : false
+	}
+	
+	render(){ return (
+	<div className="App">
+	  {this.state.isLogin? <LogNavBar /> : <NLogNavBar />}
+		<MainPage />
+	</div>
+	);} 
 }
 
 export default App;
