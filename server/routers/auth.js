@@ -61,7 +61,16 @@ router.post('/logout', auth , function(req, res){
 	})
 });
 
-
+router.get('/auth', auth, function(req,res){
+	if(!(req.user||req.token))return res.status(404).json({msg : "인증 실패"});
+	
+	var userJson = {
+		username : req.user.username,
+		isAdmin : req.user.isAdmin
+	}
+	
+	res.status(200).json(userJson)
+})
 
 
 

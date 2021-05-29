@@ -17,6 +17,9 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
+	  isAdmin : {
+		  type : sequelize.INTEGER
+	  }
     });
   },
   down: async (queryInterface, Sequelize) => {

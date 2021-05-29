@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const portNum = process.env.PORT_NUMBER||3000;
+const portNum = process.env.PORT_NUMBER||5000;
 
 const pw = require('./secret/passwords');
 

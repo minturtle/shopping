@@ -1,5 +1,5 @@
 const express = require('express');
-const docModel = require('../models').doc_info; 
+const docModel = require('../models').product; 
 const pw = require('../secret/passwords.js');
 
 var _ = require('lodash');
@@ -9,18 +9,14 @@ const router = express.Router();
 
 //글 작성
 router.post('/',(req, res)=>{
-	var doc = {
-		title:req.body.title,
-		writer: req.body.id,
+	var product = {
+		name:req.body.name,
 		image: req.body.image||null,
-		desc : req.body.desc
 	}
 	
 	docModel.create({
-		title: doc.title,
-		writerID : doc.writer,
-		image: doc.image,
-		desc : doc.desc
+		name : product.name,
+		image : product.image
 	}).then(
 		res.status(200).send("글 작성 완료")
 	).catch((err)=>{
@@ -29,7 +25,7 @@ router.post('/',(req, res)=>{
 	
 })
 
-//글 목록보기(query에서 page를 받아서 한페이지당 5개씩 글을 보여줌)
+//글 목록보기
 router.get('/lists',(req,res)=>{
 	var temp = req.query.page||1;
 	var page = (parseInt(temp)-1)*5;
@@ -38,17 +34,17 @@ router.get('/lists',(req,res)=>{
 		offset : page,
 		limit: 5
 	}).then((rows)=>{
-			res.status(200).send(JSON.stringify(rows));
+			res.status(200).json(rows);
 		}
 	).catch((err)=>{
-		res.status(500).send('error');	
+		res.status(500).json({err: err, message: null});	
 	}
 	)
 
 })
 
 
-//글 삭제(나중에 회원이 맞을때만 글 삭제 요청하는거 구현)
+//글 삭제
 router.delete('/deletedoc', (req,res)=>{
 	var docId = req.body.docID;
 	docModel.destroy({
@@ -68,8 +64,8 @@ router.patch('/revicedoc', (req,res)=>{
 		where : {
 			id : req.body.docID
 		}
-	}).then(result=>res.status(200).send({message : "수정 완료"})
-	).catch(err=>res.status(500).send({message: 'err'}));
+	}).then(result=>res.status(200).json({err : null, message : "수정 성공"})
+	).catch(err=>res.status(500).json({err: err, message: null}));
 })
 
 module.exports = router;

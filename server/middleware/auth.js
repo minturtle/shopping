@@ -5,7 +5,11 @@ const privateKey = pw.TOKEN_KEY;
 
 var auth= function(req, res, next){
 	var token = req.cookies.x_auth;
-	
+	if(!token){
+		req.user = null;
+		req.token = null;
+		next();
+	}
 	jwt.verify(token, privateKey, function(err, email) {
  		if(err){
 			req.user = null;
