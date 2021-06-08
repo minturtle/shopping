@@ -1,23 +1,28 @@
-import React, { Component } from "react";
-import MainPage from './components/mainPage.js';
-import AdminPage from './components/AdminPage.js';
-import { Route, BrowserRouter as Router } from 'react-router-dom';
+import React from 'react';
+import LandingPage from "./components/LandingPage.js";
+import LoginPage from "./components/LoginPage.js";
+import RegisterPage from "./components/RegisterPage.js";
+import ErrorPage from "./components/ErrorPage.js";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+import Auth from "./hoc/auth.js";
 
-class App extends Component {
-	state = {
-		isLogin : false,
-		isAdmin : false
-	}
-	
-	render(){ return (
-	<div className="App">
-		<Router>
-			<Route exact path="/" render={()=><MainPage/>}/>
-			<Route exact path="/admin" render={()=><AdminPage />}/>
-		</Router>
-		
-	</div>
-	);} 
+function App() {
+  return (
+    <div className="App">
+	  <Router>
+		  <Switch>
+			  <Route exact path="/"  component = {Auth(LandingPage, null)}/>
+			  <Route exact path="/login"  component = {Auth(LoginPage, false)}/>
+			  <Route exact path="/register"  component = {Auth(RegisterPage, false)} />
+			  <Route exact path= "/error" component = {ErrorPage} />
+		</Switch>
+	  </Router>
+    </div>
+  );
 }
 
 export default App;

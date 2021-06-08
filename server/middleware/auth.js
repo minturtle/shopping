@@ -1,20 +1,21 @@
-const userModel = require('../models').user_info; 
+const userModel = require('../models').User; 
 var jwt = require('jsonwebtoken'); 
 const pw = require('../secret/passwords.js');
 const privateKey = pw.TOKEN_KEY;
 
 var auth= function(req, res, next){
 	var token = req.cookies.x_auth;
+	
 	if(!token){
 		req.user = null;
 		req.token = null;
-		next();
+		return next();
 	}
 	jwt.verify(token, privateKey, function(err, email) {
- 		if(err){
+ 		if(err || !email){
 			req.user = null;
 			req.token = null;
-			next();
+			return next();
 		}
 		userModel.findOne({where :{
 			email : email,

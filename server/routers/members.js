@@ -1,5 +1,5 @@
 const express = require('express');
-const userModel = require('../models').user_info; 
+const userModel = require('../models').User; 
 const pw = require('../secret/passwords.js');
 
 var _ = require('lodash');
@@ -8,24 +8,26 @@ const saltRounds = 10;
 
 const router = express.Router();
 
-
-//register form
-router.get('/', (req,res)=>{
-	res.send('test');
-})
-
 //register
 router.post('/register', (req,res)=>{
 	var newUser = {
 		email : req.body.email,
-		username : req.body.username,
-		password : req.body.password
+		user_name : req.body.username,
+		password : req.body.password,
+		isAdmin : req.body.isAdmin||0,
+		image : req.body.image||null
 	}
 	bcrypt.genSalt(saltRounds, function(err, salt) {
     	bcrypt.hash(newUser.password, salt, function(err, hash) {
         	if(err)console.log(err);
 			newUser.password = hash;
-			userModel.create(newUser).then(()=>res.status(200).send("회원가입 성공")).catch((err)=>res.status(500).send("err"));
+			userModel.create(newUser)
+				.then(()=>res.status(200).json(
+				{success: true ,
+				 message : "회원가입 성공"}))
+				.catch((err)=>res.status(500).json(
+				{success: false ,
+				 message : "회원가입 에러"}));
 	
     	});
 	});
@@ -39,16 +41,18 @@ router.get('/see', (req,res)=>{
 			email : email
 		}
 	}).then((user)=>{
-		if(!user) return res.status(404).send("회원이 존재하지 않습니다.");
+		if(!user) return res.status(404).json({
+			success : false ,
+			user : null
+		});
 		
 		var userJson = {
 			id: user.id,
 			email : user.email,
-			username : user.username,
-			createdAt : user.createdAt,
+			username : user.username
 		}
 		
-		res.status(200).json(userJson);
+		res.status(200).json( {success : true, user : userJson});
 	}).catch((err)=>{
 		res.status(500).send("err");
 	})
@@ -65,7 +69,11 @@ router.patch('/revice', (req,res)=>{
 		where : {
 			id: req.body.id
 		}
-	}).then(()=>res.status(200).send("정보 수정완료")).catch(()=>res.status(500).send("err"))
+	}).then(()=>res.status(200).json(
+				{success: true ,
+				 message : "정보수정 성공"})).catch(()=>res.status(500).json(
+				{success: false ,
+				 message : "정보수정 실패"}))
 })
 
 //유저 삭제
@@ -74,8 +82,12 @@ router.delete('/deluser', (req,res)=>{
 		where :{
 			id : req.body.id
 		}
-	}).then(()=>res.status(200).send("삭제 성공")).catch(()=>{
-		res.status(500).send("에러");
+	}).then(()=>res.status(200).json(
+				{success: true ,
+				 message : "회원삭제 성공"})).catch(()=>{
+		res.status(500).json(
+				{success: false ,
+				 message : "회원삭제 실패"})
 	})
 })
 module.exports = router;
