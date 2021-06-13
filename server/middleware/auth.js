@@ -3,9 +3,9 @@ var jwt = require('jsonwebtoken');
 const pw = require('../secret/passwords.js');
 const privateKey = pw.TOKEN_KEY;
 
+
 var auth= function(req, res, next){
 	var token = req.cookies.x_auth;
-	
 	if(!token){
 		req.user = null;
 		req.token = null;

@@ -10,6 +10,7 @@ const pw = require('./secret/passwords');
 const membersRouter = require('./routers/members');
 const loginRouter = require('./routers/auth');
 const docuRouter = require('./routers/documents');
+const bannerRouter = require('./routers/banner');
 
 const app = express();
 const cors =require('cors');
@@ -23,7 +24,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use('/members', membersRouter);
 app.use('/login', loginRouter);
 app.use('/posting', docuRouter);
-
+app.use('/banner', bannerRouter);
 app.get('/', (req,res)=>{
 	res.json({name : "kim"});
 })
